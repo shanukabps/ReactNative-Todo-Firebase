@@ -4,9 +4,8 @@ import { useEffect } from 'react';
 import { Modal,StyleSheet, TouchableOpacity, View, Text, SafeAreaView, FlatList } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { firebase } from '../Firebase/FirebaseConfig'
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function HomeScreen({ navigation }) {
     const [task, setTask] = useState([]);
@@ -29,50 +28,21 @@ export default function HomeScreen({ navigation }) {
                     status: docSnapshot.data().status
                 }))
                 setTask(tasks)
-                _storeData(tasks)
             }, error: (error => { console.log(`error`, error) })
         })
-        getData()
     }, []);
 
     useEffect(() => {
-        const comTask = task.filter(a => {
-       
+        const comTask = task.filter(a => {    
             return a.status == 'not-completed'
         })
         setCompltedTask(comTask)
     }, [task])
 
-
-    const _storeData = async (value) => {
-        try {
-           
-            await AsyncStorage.setItem(
-                'TASKS',
-                'dddddd'
-            );
-        } catch (error) {
-            // Error saving data
-        }
-    };
-    const getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('TASKS');
-            if (value !== null) {
-                // We have data!!
-                console.log("valye pass", value);
-                return value;
-            }
-        } catch (error) {
-            // Error retrieving data
-        }
-    };
-
-    // console.log(`getData()`, _retrieveData())
-    function markAsDone(id) {
+   async function markAsDone(id) {
         if (id != null) {
             const db = firebase.firestore();
-            db.collection('todos').doc(id).update({
+          await  db.collection('todos').doc(id).update({
                 status: "done"
             })
         }

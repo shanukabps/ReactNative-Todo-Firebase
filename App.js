@@ -34,11 +34,11 @@ function App() {
           padding: 0,
         },
       }}>
-        {/* <Tab.Screen name="Login" component={Login} options={{
+        <Tab.Screen name="Login" component={Login} options={{
           tabBarVisible: false, tabBarIcon: ({ color, size }) => (
             <Ionicons name="log-out" color={color} size={size} />
           ),
-        }} /> */}
+        }} />
         <Tab.Screen name="Todo" component={HomeStackScreen} options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="menu" color={color} size={size} />

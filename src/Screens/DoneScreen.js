@@ -15,7 +15,6 @@ export default function DoneScreen({ navigation }) {
     useEffect(() => {
         firebase.auth().onAuthStateChanged((user) => {
             setCurrentUser(user.email)
-            setPending(false)
         });
     }, []);
 
@@ -35,7 +34,6 @@ export default function DoneScreen({ navigation }) {
 
     useEffect(() => {
         const comTask = task.filter(a => {
-            console.log(`a.status`, a.status)
             return a.status == 'done'
         })
         setCompltedTask(comTask)

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "410414127042",
+    "firebase_url": "https://todosapp-8de2d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "todosapp-8de2d",
+    "storage_bucket": "todosapp-8de2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410414127042:android:001d1542eb2f47a4bce85b",
+        "android_client_info": {
+          "package_name": "com.test.todo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410414127042-0ccvinesa4sogkvkhp9v44mp7vgnsf2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnRShx21lkdZY_i_q6DgM9kZAPObqLpZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410414127042-0ccvinesa4sogkvkhp9v44mp7vgnsf2n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

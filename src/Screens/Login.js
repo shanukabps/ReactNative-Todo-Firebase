@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, SafeAreaView, TextInput, Text, View } fro
 import firebase from 'firebase'
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-import * as Analytics from 'expo-firebase-analytics';
+// import * as Analytics from 'expo-firebase-analytics';
 
 WebBrowser.maybeCompleteAuthSession();
 export default function Login({ navigation }) {
@@ -27,12 +27,12 @@ export default function Login({ navigation }) {
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(res => {
-                    console.log(`user`, res.user)
-                    Analytics.logEvent('share', {
-                        contentType: 'text',
-                        itemId: 'User Login In',
-                        method: 'Email and password'
-                    });
+                  
+                    // Analytics.logEvent('share', {
+                    //     contentType: 'text',
+                    //     itemId: 'User Login In',
+                    //     method: 'Email and password'
+                    // });
                   //  firebase.analytics().logEvent('notification_received');
                     navigation.navigate('Todo')
                 })

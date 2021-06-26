@@ -31,27 +31,15 @@ export default function CreateTaskScreen({ route, navigation }) {
                   email:docSnapshot.data().email
                 }))
                 setAllEmails(allEmail)
-                const uniqueArr = [];
-                
+                const uniqueArr = [];                
                 allEmail&&allEmail.forEach((item) => {
                     if (!uniqueArr.includes(item.email)) {
                         uniqueArr.push(item.email);
                     }
-
                 })
                 setUniqueEmails(uniqueArr)
             }, error: (error => { console.log(`error`, error) })
         })
-        // if (allEmails.length !== 0) {
-        //     const uniqueArr = [];
-        //     allEmails.forEach((item) => {
-        //        if (!uniqueArr.includes(item.email)) {
-        //             uniqueArr.push(item.email);
-        //         }
-
-        //     })
-        //     setUniqueEmails(uniqueArr)
-        // }
     }, []);
 
    useEffect(() => {
@@ -64,7 +52,6 @@ export default function CreateTaskScreen({ route, navigation }) {
                         setDate(doc.data().date)
                         setPickedValue(doc.data().assignEmail)
                     } else {
-                        // doc.data() will be undefined in this case
                         console.log("No such document!");
                     }
                 }).catch((error) => {
@@ -72,16 +59,10 @@ export default function CreateTaskScreen({ route, navigation }) {
                 });
             }
         });
-
         return unsubscribe;
     }, [navigation]);
 
     useEffect(() => {
-        getData().then((data) => {
-            console.log('====================================');
-            console.log(data);
-            console.log('====================================');
-        })
         if (route.params.userId) {
             var docRef = firebase.firestore().collection("todos").doc(route.params.userId);
             docRef.get().then((doc) => {
@@ -90,27 +71,14 @@ export default function CreateTaskScreen({ route, navigation }) {
                     setDate(doc.data().date)
                     setPickedValue(doc.data().assignEmail)
                 } else {
-                    // doc.data() will be undefined in this case
                     console.log("No such document!");
                 }
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
-        }
-        
+        }        
     }, [])
-    const getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('TASKS');
-            if (value !== null) {
-                // We have data!!
-                console.log("valye pass",value);
-                return value;
-            }
-        } catch (error) {
-            // Error retrieving data
-        }
-    };
+
     function addData() {
         if (!!title && !!pickedValue && !!date && currentuser && route.params.buttonName === 'Add Todo') {
             firebase.firestore().collection("todos").doc().set({
@@ -121,7 +89,6 @@ export default function CreateTaskScreen({ route, navigation }) {
                 status: 'not-completed'
             })
             showAlert("Successfully", "saved")
-
             setTitle("")
             setAssginName("")
             setDate(Date.now())
@@ -136,7 +103,7 @@ export default function CreateTaskScreen({ route, navigation }) {
             showAlert("Successfully", "Edited")
         }
         else {
-            console.log(`alert`);
+       
             showAlert("Filed can not be empty", "please checked all the filed")
         }
     }
@@ -192,9 +159,6 @@ export default function CreateTaskScreen({ route, navigation }) {
                         }
                         }>
                         <Picker.Item key={'unselectable'} label={"Select Emali"} value={0} />
-                        {console.log(":::", allEmails)}
-                        {console.log(":::",uniqueEmails
-                        )}
                         {uniqueEmails.map((item, index) => {
                             return (<Picker.Item label={item} value={item} key={index} />)
                         })}
