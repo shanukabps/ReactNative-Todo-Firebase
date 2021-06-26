@@ -15,7 +15,7 @@ export default function CreateTaskScreen({ route, navigation }) {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [allEmails, setAllEmails] = useState([]);
-    const [uniqueEmails, setUniqueEmails] = useState();
+    const [uniqueEmails, setUniqueEmails] = useState([]);
     const [currentuser, setCurrentUser] = useState();
     const [pickedValue, setPickedValue] = useState();
 
@@ -31,28 +31,57 @@ export default function CreateTaskScreen({ route, navigation }) {
                   email:docSnapshot.data().email
                 }))
                 setAllEmails(allEmail)
+                const uniqueArr = [];
+                
+                allEmail&&allEmail.forEach((item) => {
+                    if (!uniqueArr.includes(item.email)) {
+                        uniqueArr.push(item.email);
+                    }
+
+                })
+                setUniqueEmails(uniqueArr)
             }, error: (error => { console.log(`error`, error) })
         })
-        if (allEmails.length !== 0) {
-            const uniqueArr = [];
-            allEmails.forEach((item) => {
-               if (!uniqueArr.includes(item.email)) {
-                    uniqueArr.push(item.email);
-                }
+        // if (allEmails.length !== 0) {
+        //     const uniqueArr = [];
+        //     allEmails.forEach((item) => {
+        //        if (!uniqueArr.includes(item.email)) {
+        //             uniqueArr.push(item.email);
+        //         }
 
-            })
-            setUniqueEmails(uniqueArr)
-        }
+        //     })
+        //     setUniqueEmails(uniqueArr)
+        // }
     }, []);
 
-    useEffect(() => {
+   useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log('Refreshed!');
+            if (route.params.userId) {
+                var docRef = firebase.firestore().collection("todos").doc(route.params.userId);
+                docRef.get().then((doc) => {
+                    if (doc.exists) {
+                        setTitle(doc.data().title)
+                        setDate(doc.data().date)
+                        setPickedValue(doc.data().assignEmail)
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such document!");
+                    }
+                }).catch((error) => {
+                    console.log("Error getting document:", error);
+                });
+            }
         });
+
         return unsubscribe;
     }, [navigation]);
 
     useEffect(() => {
+        getData().then((data) => {
+            console.log('====================================');
+            console.log(data);
+            console.log('====================================');
+        })
         if (route.params.userId) {
             var docRef = firebase.firestore().collection("todos").doc(route.params.userId);
             docRef.get().then((doc) => {
@@ -68,8 +97,20 @@ export default function CreateTaskScreen({ route, navigation }) {
                 console.log("Error getting document:", error);
             });
         }
+        
     }, [])
-
+    const getData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('TASKS');
+            if (value !== null) {
+                // We have data!!
+                console.log("valye pass",value);
+                return value;
+            }
+        } catch (error) {
+            // Error retrieving data
+        }
+    };
     function addData() {
         if (!!title && !!pickedValue && !!date && currentuser && route.params.buttonName === 'Add Todo') {
             firebase.firestore().collection("todos").doc().set({
@@ -116,7 +157,8 @@ export default function CreateTaskScreen({ route, navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        ((allEmails.length > 0)&&
+           ( <SafeAreaView style={styles.container}>
 
             <View style={styles.topBar}>
                 <Text style={styles.topBarText}>Create Task</Text>
@@ -150,7 +192,10 @@ export default function CreateTaskScreen({ route, navigation }) {
                         }
                         }>
                         <Picker.Item key={'unselectable'} label={"Select Emali"} value={0} />
-                        {!!uniqueEmails && uniqueEmails.map((item, index) => {
+                        {console.log(":::", allEmails)}
+                        {console.log(":::",uniqueEmails
+                        )}
+                        {uniqueEmails.map((item, index) => {
                             return (<Picker.Item label={item} value={item} key={index} />)
                         })}
                     </Picker>
@@ -185,7 +230,8 @@ export default function CreateTaskScreen({ route, navigation }) {
                     accessibilityLabel="Learn more about this purple button"
                 />
             </View>
-        </SafeAreaView>)
+            </SafeAreaView>) || (allEmails&&<View><Text>Loading</Text></View> )  )
+    )
 }
 
 const styles = StyleSheet.create({

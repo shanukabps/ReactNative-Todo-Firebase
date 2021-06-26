@@ -3,8 +3,7 @@ import { StyleSheet, TouchableOpacity, SafeAreaView, TextInput, Text, View } fro
 import firebase from 'firebase'
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import * as Analytics from 'expo-firebase-analytics';
 
 WebBrowser.maybeCompleteAuthSession();
 export default function Login({ navigation }) {
@@ -16,24 +15,25 @@ export default function Login({ navigation }) {
 
         webClientId: '410414127042-0ccvinesa4sogkvkhp9v44mp7vgnsf2n.apps.googleusercontent.com',
     });
-    console.log(`password`, email)
+
     useEffect(() => {
         if (response?.type === 'success') {
             const { authentication } = response;
         }
     }, [response]);
 
-    // useEffect(() => {
-    //     setemail("")
-    //     setpassword("")
-    // }, [])
 
     async function login(email, password) {
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(res => {
                     console.log(`user`, res.user)
-                    alert(res.user.email)
+                    Analytics.logEvent('share', {
+                        contentType: 'text',
+                        itemId: 'User Login In',
+                        method: 'Email and password'
+                    });
+                  //  firebase.analytics().logEvent('notification_received');
                     navigation.navigate('Todo')
                 })
         } catch (error) {
